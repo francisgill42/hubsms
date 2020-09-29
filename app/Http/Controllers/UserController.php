@@ -17,9 +17,6 @@ class UserController extends Controller
         $users = User::orderBy('id','DESC')->get();
         foreach($users as $user){
             $user->role =  $user->role;
-            $user->department = $user->department;
-            $user->district =  $user->district;
-            $user->status =  $user->status;
         }     
         
         return response()->json([ 'success' => true,'data' => $users] ,200);
@@ -29,28 +26,31 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [ 
-			'role_id' => 'required',
-			'name' => 'required', 
+           
+            'abc' => 'required',
+            
+            'role_id' => 'required',
+            'first_name' => 'required', 
+            'last_name' => 'required', 
 			'email' => 'required|email|unique:users',
-			'password' => 'required', 
+			
 			'mobile_no' => 'required|unique:users',
-			'cnic' => 'required',
 		]); 
 		if ($validator->fails()) { 
-			return response()->json([ 'success' => false, 'errors' => $validator->errors() ]); 
+			return response()->json(['success' => false, 'errors' => $validator->errors() ]); 
         }
         
         $arr = [
             'role_id' => $request->role_id, 
-            'department_id' => $request->department_id, 
             'master' => 0, 
             'email' => $request->email, 
-            'password' => bcrypt($request->password), 
-            'name' => $request->name,   
+            'password' => bcrypt($request->pwd), 
+            'first_name' => $request->first_name, 
+            'middle_name' => $request->middle_name, 
+            'last_name' => $request->last_name,   
             'mobile_no' => $request->mobile_no, 
-            'cnic' =>  $request->cnic, 
             'isActive' => $request->isActive, 
-            'district_id' => $request->district_id
+            'photo' => $request->photo
         ];
 
         $created = User::create($arr);
@@ -59,9 +59,6 @@ class UserController extends Controller
             
             $created->user = $created->user;
             $created->role = $created->role;
-            $created->department = $created->department;
-            $created->status = $created->status;
-            $created->district = $created->district;
             return response()->json(['success' => true, 'data' => $created]);
         }
         else{
@@ -75,14 +72,14 @@ class UserController extends Controller
     {
         $arr = [
             'role_id' => $request->role_id, 
-            'department_id' => $request->department_id, 
             'master' => 0, 
             'email' => $request->email, 
-            'name' => $request->name,   
+            'first_name' => $request->first_name, 
+            'middle_name' => $request->middle_name, 
+            'last_name' => $request->last_name,   
             'mobile_no' => $request->mobile_no, 
-            'cnic' =>  $request->cnic, 
-            'isActive' => $request->isActive, 
-            'district_id' => $request->district_id
+            'isActive' => $request->isActive,
+            'photo' => $request->photo
         ];
 
         $updated = User::where('id',$id)->update($arr);
@@ -93,9 +90,7 @@ class UserController extends Controller
             
             $user->user = $user->user;
             $user->role = $user->role;
-            $user->department = $user->department;
             $user->status = $user->status;
-            $user->district = $user->district;
 
             return response()->json(['success' => true, 'data' => $user]);
         }

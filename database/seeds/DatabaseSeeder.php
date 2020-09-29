@@ -16,7 +16,9 @@ class DatabaseSeeder extends Seeder
         $users = [ 
             [
                 'master' => 1,
-                'name' => 'master',
+                'first_name' => 'master',
+                'middle_name' => '',
+                'last_name' => '',
                 'email' => 'master@erp.com',
                 'password' => bcrypt('secret')
             ]
